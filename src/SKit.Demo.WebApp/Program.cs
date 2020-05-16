@@ -45,11 +45,7 @@ namespace SKit.Demo.WebApp
                 })
                 .UseSerilog((context, config) =>
                 {
-                    config.MinimumLevel.Debug()
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console()
-                    .ReadFrom.Configuration(context.Configuration);
+                    config.ReadFrom.Configuration(context.Configuration);
                 });
     }
 }

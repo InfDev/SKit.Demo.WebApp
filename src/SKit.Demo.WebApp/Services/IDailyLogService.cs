@@ -9,6 +9,6 @@ namespace SKit.Demo.WebApp.Services
 {
     public interface IDailyLogService
     {
-        DailyLogBlock Get(DateTime? startingFrom = null, int maxEvents = 100);
+        Task<DailyLogBlock> Get(DateTime? startingFrom = null, int maxEvents = 100);
     }
 }

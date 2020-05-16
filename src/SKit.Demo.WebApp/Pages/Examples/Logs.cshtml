@@ -1,8 +1,34 @@
 ﻿@page
 @model SKit.Demo.WebApp.Pages.Examples.LogsModel
+
 @{
     ViewData["Title"] = "Logs";
 }
 
 <h1>Logs</h1>
+
+<div class="row">
+    <!--Grid column-->
+    <div class="col-12">
+        <!-- Form contact -->
+        <form method="post" class="form-inline p-5 grey-text">
+            <div class="md-form form-sm">
+                <i class="far fa-clock prefix"></i>
+                <label asp-for="Input.StartingFrom"></label>
+                <input type="text" asp-for="Input.StartingFrom" class="form-control form-control-sm">
+                <span asp-validation-for="Input.StartingFrom" class="text-danger"></span>
+            </div>
+            <div class="md-form form-sm mx-sm-3">
+                <i class="fas fa-align-justify prefix"></i>
+                <label asp-for="Input.MaxEvents"></label>
+                <input type="text" asp-for="Input.MaxEvents" class="form-control form-control-sm">
+                <span asp-validation-for="Input.MaxEvents" class="text-danger"></span>
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-primary">Refresh<i class="far fa-paper-planeml-1"></i></button>
+            </div>
+        </form>
+        <!-- Form contact -->
+    </div>
+</div>
 

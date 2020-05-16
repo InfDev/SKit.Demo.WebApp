@@ -5,39 +5,43 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using SKit.Demo.WebApp.Models;
+using System.Text;
 
 namespace SKit.Demo.WebApp.Services
 {
     public class DailyLogService : IDailyLogService
     {
-        public DailyLogBlock Get(DateTime? startingFrom = null, int maxEvents = 100)
+        public Task<DailyLogBlock> Get(DateTime? startingFrom = null, int maxEvents = 100)
         {
-            var eventList = new List<LogEventItem>();
-            var result = new DailyLogBlock()
+            return Task<DailyLogBlock>.Factory.StartNew(() =>
             {
-                StartingFrom = startingFrom ?? DateTime.Now,
-                Events = eventList
-            };
+                var eventList = new List<LogEventItem>();
+                var result = new DailyLogBlock()
+                {
+                    StartingFrom = startingFrom ?? DateTime.Now.Date,
+                    Events = eventList
+                };
 
-            var filePath = GetLogPath(result.StartingFrom);
-            if (!File.Exists(filePath))
+                var filePath = GetLogPath(result.StartingFrom);
+                if (!File.Exists(filePath))
+                    return result;
+
+                var lines = InternalReadAllLines(filePath, Encoding.UTF8);
+
+                var count = 0;
+                foreach (var line in lines)
+                {
+                    var item = LineParse(line);
+                    if (item == null || item.EventTime < startingFrom)
+                        continue;
+                    eventList.Add(item);
+
+                    if (++count >= maxEvents)
+                        break;
+                }
+
                 return result;
-
-            var lines = File.ReadAllLines(filePath);
-            
-            var count = 0;
-            foreach (var line in lines)
-            {
-                var item = LineParse(line);
-                if (item == null || item.EventTime < startingFrom)
-                    continue;
-                eventList.Add(item);
-
-                if (++count >= maxEvents)
-                    break;
-            }
-
-            return result;
+            });
         }
 
         private string GetLogPath(DateTime logDate)
@@ -78,6 +82,22 @@ namespace SKit.Demo.WebApp.Services
                 Message = msg
             };
             return result;
+        }
+
+        private string[] InternalReadAllLines(string path, Encoding encoding)
+        {
+            List<string> list = new List<string>();
+
+            using (var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (StreamReader streamReader = new StreamReader(file, encoding))
+                {
+                    string str;
+                    while ((str = streamReader.ReadLine()) != null)
+                        list.Add(str);
+                }
+            }
+            return list.ToArray();
         }
     }
 }
