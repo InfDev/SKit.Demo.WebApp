@@ -12,10 +12,10 @@
     <div class="col-12">
         <!-- Form contact -->
         <form method="post" class="form-inline p-5 grey-text">
-            <div class="md-form form-sm">
+            <div class="md-form form-sm datepicker">
                 <i class="far fa-clock prefix"></i>
                 <label asp-for="Input.StartingFrom"></label>
-                <input type="text" asp-for="Input.StartingFrom" class="form-control form-control-sm">
+                <input type="date" asp-for="Input.StartingFrom" class="form-control form-control-sm">
                 <span asp-validation-for="Input.StartingFrom" class="text-danger"></span>
             </div>
             <div class="md-form form-sm mx-sm-3">
