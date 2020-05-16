@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using SKit.Demo.WebApp.Services;
+
 namespace SKit.Demo.WebApp
 {
     public class Startup
@@ -25,6 +27,8 @@ namespace SKit.Demo.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
+            services.AddScoped<IDailyLogService, DailyLogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
