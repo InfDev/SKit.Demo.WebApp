@@ -1,0 +1,27 @@
+﻿@page
+@model SKit.Demo.WebApp.Pages.Examples.SysInfoModel
+@{
+    ViewData["Title"] = "System Info";
+}
+
+<h2>System Info</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Infos)
+        {
+        <tr>
+            <td>@item.Text</td>
+            <td>@item.Value</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
