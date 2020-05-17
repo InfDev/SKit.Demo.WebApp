@@ -12,6 +12,8 @@ using SKit.Demo.WebApp.Models;
 
 // https://mdbootstrap.com/education/bootstrap/quick-start/
 // https://fontawesome.com/icons?d=gallery&m=free
+// https://mdbootstrap.com/docs/jquery/tables/basic/
+// https://mdbootstrap.com/docs/jquery/tables/datatables/
 
 namespace SKit.Demo.WebApp.Pages.Examples
 {
@@ -20,13 +22,15 @@ namespace SKit.Demo.WebApp.Pages.Examples
         public class InputModel
         {
             [Display(Name = "Starting from")]
-            public DateTime? StartingFrom { get; set; }
+            [RegularExpression(@"^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$", ErrorMessage = "The time should be in the format 'HH:MM'")]
+            [Required]
+            public string FromTime { get; set; } = "09:00";
 
-            [Display(Name = "Maximum events")]
-            [Range(0, 100)]
-            public int MaxEvents { get; set; } = 50;
+            //[Display(Name = "Maximum events")]
+            //public int MaxEvents { get; set; } = 10000;
         }
 
+        private static int MAX_EVENTS = 10000;
         private readonly IDailyLogService _dailyLogService;
 
         [BindProperty]
@@ -41,18 +45,26 @@ namespace SKit.Demo.WebApp.Pages.Examples
 
         public async void OnGet()
         {
-            Data = await _dailyLogService.Get(Input.StartingFrom, Input.MaxEvents);
+            Data = await _dailyLogService.Get(FromTimeToDateTime(Input.FromTime), MAX_EVENTS);
             Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
+                Data = await _dailyLogService.Get(FromTimeToDateTime(Input.FromTime), MAX_EVENTS);
                 return Page();
             }
-            Data = await _dailyLogService.Get(Input.StartingFrom, Input.MaxEvents);
-            return Page();
+            return RedirectToPage();
+        }
+
+        public DateTime FromTimeToDateTime(string time)
+        {
+            var timeSpan = TimeSpan.Parse(time);
+            var fromStr = $"{DateTime.Now:yyyy-MM-dd} {time}";
+            var from = DateTime.Now.Date + timeSpan;
+            return from;
         }
     }
 }

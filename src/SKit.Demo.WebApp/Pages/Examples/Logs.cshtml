@@ -2,33 +2,84 @@
 @model SKit.Demo.WebApp.Pages.Examples.LogsModel
 
 @{
-    ViewData["Title"] = "Logs";
+    ViewData["Title"] = "Event log";
 }
 
-<h1>Logs</h1>
+<h1>Event log</h1>
 
 <div class="row">
     <!--Grid column-->
     <div class="col-12">
         <!-- Form contact -->
         <form method="post" class="form-inline p-5 grey-text">
-            <div class="md-form form-sm datepicker">
-                <i class="far fa-clock prefix"></i>
-                <label asp-for="Input.StartingFrom"></label>
-                <input type="date" asp-for="Input.StartingFrom" class="form-control form-control-sm">
-                <span asp-validation-for="Input.StartingFrom" class="text-danger"></span>
+            <div class="text-center mr-2">
+                <button class="btn btn-outline-primary btn-sm waves-effect">Refresh</button>
             </div>
-            <div class="md-form form-sm mx-sm-3">
-                <i class="fas fa-align-justify prefix"></i>
-                <label asp-for="Input.MaxEvents"></label>
-                <input type="text" asp-for="Input.MaxEvents" class="form-control form-control-sm">
-                <span asp-validation-for="Input.MaxEvents" class="text-danger"></span>
-            </div>
-            <div class="text-center mt-4">
-                <button class="btn btn-primary">Refresh<i class="far fa-paper-planeml-1"></i></button>
+            <div class="md-form input-with-post-icon timepicker" default="now">
+                <label asp-for="Input.FromTime"></label>
+                <i class="far fa-clock input-prefix"></i>
+                <input type="text" asp-for="Input.FromTime" class="form-control form-control-sm" placeholder="Indicate time">
+                <span asp-validation-for="Input.FromTime" class="text-danger"></span>
             </div>
         </form>
         <!-- Form contact -->
     </div>
 </div>
 
+<table id="dtEvents" class="table" width="100%">
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>Type</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Data.Events)
+        {
+            <tr>
+                <td>@($"{item.EventTime:HH:mm:ss.fff}")</td>
+                <td>@item.EventType</td>
+                <td>@item.Message</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section CSS {
+    <!-- DataTables CSS -->
+    <link href="~/lib/mdb/css/addons/datatables2.min.css" rel="stylesheet">
+                  
+    <!-- DataTables Select CSS -->
+    <link href="~/lib/mdb/css/addons/datatables-select2.min.css" rel="stylesheet">
+}
+
+@section Scripts {
+    <!-- DataTables JS -->
+    <script src="~/lib/mdb/js/addons/datatables2.min.js" type="text/javascript"></script>
+    <!-- DataTables Select JS -->
+    <script src="~/lib/mdb/js/addons/datatables-select2.min.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dtEvents').DataTable({
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var search = $(`<input class="form-control form-control-sm" type="text" placeholder="Search">`)
+                            .appendTo($(column.footer()).empty())
+                            .on('change input', function () {
+                                var val = $(this).val();
+                                column
+                                    .search(val ? val : '', true, false)
+                                    .draw();
+                            });
+
+                    });
+                },
+                "pagingType": "first_last_numbers"
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+}
