@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,10 +8,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using SKit.Demo.WebApp.Services;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace SKit.Demo.WebApp
 {
@@ -47,6 +50,17 @@ namespace SKit.Demo.WebApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            // For demonstration purposes only
+            // In real applications, opening such access is unacceptable
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".log"] = "text/plain";
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Files")),
+                RequestPath = "/Files",
+                ContentTypeProvider = provider
+            });
 
             app.UseRouting();
 

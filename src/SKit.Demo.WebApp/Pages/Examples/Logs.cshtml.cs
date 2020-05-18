@@ -24,7 +24,7 @@ namespace SKit.Demo.WebApp.Pages.Examples
             [Display(Name = "Starting from")]
             [RegularExpression(@"^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$", ErrorMessage = "The time should be in the format 'HH:MM'")]
             [Required]
-            public string FromTime { get; set; } = "09:00";
+            public string FromTime { get; set; } = "07:00";
 
             //[Display(Name = "Maximum events")]
             //public int MaxEvents { get; set; } = 10000;
@@ -38,9 +38,12 @@ namespace SKit.Demo.WebApp.Pages.Examples
 
         public DailyLogBlock Data { get; set; }
 
+        public string OriginalLogFileURL { get; set; }
+
         public LogsModel(IDailyLogService dailyLogService)
         {
             _dailyLogService = dailyLogService;
+            OriginalLogFileURL = _dailyLogService.GetLogURL(DateTime.Now);
         }
 
         public async void OnGet()

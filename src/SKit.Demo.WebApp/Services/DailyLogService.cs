@@ -44,11 +44,20 @@ namespace SKit.Demo.WebApp.Services
             });
         }
 
+        private string GetLogFileName(DateTime logDate)
+        {
+            return $"skit.demo.webapp_{logDate:yyyyMMdd}.log";
+        }
+
         private string GetLogPath(DateTime logDate)
         {
-            var fileName = $"skit.demo.webapp_{logDate:yyyyMMdd}.log";
-            var result = Path.Combine(Environment.CurrentDirectory, "Files", "Logs", fileName);
-            return result;
+            return Path.Combine(Environment.CurrentDirectory, 
+                "Files", "Logs", GetLogFileName(logDate));
+        }
+
+        public string GetLogURL(DateTime logDate)
+        {
+            return $"/Files/Logs/{GetLogFileName(logDate)}";
         }
 
         private LogEventItem LineParse(string line)

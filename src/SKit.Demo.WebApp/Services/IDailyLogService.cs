@@ -10,5 +10,7 @@ namespace SKit.Demo.WebApp.Services
     public interface IDailyLogService
     {
         Task<DailyLogBlock> Get(DateTime? startingFrom = null, int maxEvents = 100);
+        string GetLogURL(DateTime logDate);
+
     }
 }

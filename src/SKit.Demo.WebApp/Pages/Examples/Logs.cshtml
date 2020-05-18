@@ -21,6 +21,9 @@
                 <input type="text" asp-for="Input.FromTime" class="form-control form-control-sm" placeholder="Indicate time">
                 <span asp-validation-for="Input.FromTime" class="text-danger"></span>
             </div>
+            <div class="md-form ml-2">
+                <a href="@Model.OriginalLogFileURL" target="_blank">Original log file</a>
+            </div>
         </form>
         <!-- Form contact -->
     </div>
