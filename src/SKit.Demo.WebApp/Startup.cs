@@ -70,6 +70,14 @@ namespace SKit.Demo.WebApp
             {
                 endpoints.MapRazorPages();
             });
+
+//            var envName = HostingEnvironmentName();
         }
+
+        public string HostingEnvironmentName()
+        {
+            return Configuration[HostDefaults.EnvironmentKey]; //.GetValue<string>(HostDefaults.EnvironmentKey);
+        }
+
     }
 }
