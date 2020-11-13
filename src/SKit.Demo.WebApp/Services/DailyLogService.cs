@@ -10,7 +10,9 @@ using System.Text;
 namespace SKit.Demo.WebApp.Services
 {
     public class DailyLogService : IDailyLogService
-    {
+    {        
+        public string LogFolder => "Files/Logs";
+        
         public Task<DailyLogBlock> Get(DateTime? startingFrom = null, int maxEvents = 100)
         {
             return Task<DailyLogBlock>.Factory.StartNew(() =>
@@ -51,13 +53,12 @@ namespace SKit.Demo.WebApp.Services
 
         private string GetLogPath(DateTime logDate)
         {
-            return Path.Combine(Environment.CurrentDirectory, 
-                "Files", "Logs", GetLogFileName(logDate));
+            return Path.Combine(LogFolder.Replace('/', Path.DirectorySeparatorChar), GetLogFileName(logDate));
         }
 
         public string GetLogURL(DateTime logDate)
         {
-            return $"/Files/Logs/{GetLogFileName(logDate)}";
+            return $"/{LogFolder}/{GetLogFileName(logDate)}";
         }
 
         private LogEventItem LineParse(string line)
