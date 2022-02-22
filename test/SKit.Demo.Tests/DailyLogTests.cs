@@ -8,7 +8,7 @@ namespace SKit.Demo.Tests
 {
     public class DailyLogTests
     {
-        private static DateTime _dailyLogDate = new DateTime(2020, 11, 13);
+        private static DateTime _dailyLogDate = new DateTime(2022, 02, 22);
 
         [Fact]
         public async void DailyLogServiceTest()
